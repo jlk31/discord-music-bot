@@ -3,6 +3,7 @@ import discord
 from discord.ext import commands
 from discord.ext import app_commands
 from dotenv import load_dotenv
+import yt_dlp
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
@@ -17,5 +18,29 @@ async def on_ready():
     await bot.tree.sync()
     print(f"{bot.user} is online!")
 
+@bot.tree.command(name="play", description="Play a song or add it to the queue.")
+@app_commands.describe(song_query="Search query")
+async def play(interaction: discord.Interaction, song_query: str):
+    await interation.response.defer()
+
+    voice_channel = interaction.user.voice.channel
+
+    if voice_channel is None:
+        await interaction.followup.send("You must be in a voice channel to use this command.")
+        return
+
+    voice_client = interaction.guild.voice_client
+
+    if voice_client is None:
+        voice_client = await voice_channel.connect()
+    elif voice_client != voice_client.channel:
+        await voice_client.move_to(voice_channel)
+
+    ydl_options = {
+        "format": "bestaudio[abr<=96]/bestaudio",
+        "noplaylist": True,
+        "youtube_include_dash_manifest": False,
+        "youtube_include_hls_manifest": False,
+    }
 
 bot.run(TOKEN)
