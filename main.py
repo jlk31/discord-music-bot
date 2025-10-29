@@ -88,4 +88,11 @@ if TOKEN is None:
         "DISCORD_TOKEN is not set. Check .env, environment variables, or PyCharm run config."
     )
 
+# Temp for false commit
+
+x = 0
+
+for x in range(2):
+    pass
+
 bot.run(TOKEN)
