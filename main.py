@@ -4,9 +4,18 @@ from discord.ext import commands
 from discord.ext import app_commands
 from dotenv import load_dotenv
 import yt_dlp
+import asyncio
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
+
+async def search_ytdlp_async(query, ydl_opts):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, lambda: _extract(query, ydl_opts))
+
+def _extract(query, ydl_opts):
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        return ydl.extract_info(query, download=False)
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -42,5 +51,9 @@ async def play(interaction: discord.Interaction, song_query: str):
         "youtube_include_dash_manifest": False,
         "youtube_include_hls_manifest": False,
     }
+
+    query = "ytsearch1:" + song_query
+
+
 
 bot.run(TOKEN)
