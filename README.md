@@ -60,3 +60,11 @@ This repository contains my code for a small personal project to learn how to us
 - **discord.py** - Discord API wrapper
 - **python-dotenv** - Environment variable management
 - **ffmpeg** - Audio-handling libraries
+
+## Contributing
+
+This is a personal project but if you have any suggestions or additions to make feel free to for this repository.
+
+## License
+
+This project is open source and available for educational purposes.
