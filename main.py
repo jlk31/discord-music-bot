@@ -53,6 +53,23 @@ async def play(interaction: discord.Interaction, song_query: str):
     }
 
     query = "ytsearch1:" + song_query
+    results = await search_ytdlp_async(query, ydl_options)
+    tracks = results.get("entries", [])
+
+    if tracks is None:
+        await interaction.followup.send("No songs found.")
+        return
+
+    first_track = tracks[0]
+    audio_url = first_track["url"]
+    title = first_track.get("title", "untitled")
+
+    ffmpeg_options = {
+        "before_options": "reconnect 1 - reconnect_streamed 1 -reconnect_delay_max 5",
+        "options": "-vn -c:a libopus -b:a 96k",
+    }
+
+
 
 
 
