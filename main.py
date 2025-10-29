@@ -1,13 +1,16 @@
 import os
 import discord
 from discord.ext import commands
-from discord.ext import app_commands
+from discord import app_commands
 from dotenv import load_dotenv
 import yt_dlp
 import asyncio
+from pathlib import Path
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 TOKEN = os.getenv("DISCORD_TOKEN")
+
+GUILD_ID = 1432886624164778044
 
 async def search_ytdlp_async(query, ydl_opts):
     loop = asyncio.get_running_loop()
@@ -27,10 +30,16 @@ async def on_ready():
     await bot.tree.sync()
     print(f"{bot.user} is online!")
 
+# Temporary event handler
+
+@bot.event
+async def on_message(msg):
+    print(msg.guild.id)
+
 @bot.tree.command(name="play", description="Play a song or add it to the queue.")
 @app_commands.describe(song_query="Search query")
 async def play(interaction: discord.Interaction, song_query: str):
-    await interation.response.defer()
+    await interaction.response.defer()
 
     voice_channel = interaction.user.voice.channel
 
@@ -69,8 +78,13 @@ async def play(interaction: discord.Interaction, song_query: str):
         "options": "-vn -c:a libopus -b:a 96k",
     }
 
+    source = discord.FFmpegOpusAudio(audio_url, **ffmpeg_options, executable="bin\\ffmpeg\\ffmpeg.exe")
 
+    voice_client.play(source)
 
-
+if TOKEN is None:
+    raise RuntimeError(
+        "DISCORD_TOKEN is not set. Check .env, environment variables, or PyCharm run config."
+    )
 
 bot.run(TOKEN)
