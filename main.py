@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 import yt_dlp
 import asyncio
 from pathlib import Path
+from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 TOKEN = os.getenv("DISCORD_TOKEN")
